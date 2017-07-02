@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1e8c58f8ed49940152b1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "13cc796b141dfd01af25"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24298,20 +24298,24 @@
 	        { className: "addTodo col-sm-12 text-center" },
 	        _react2.default.createElement(
 	          "div",
-	          { className: "col-sm-4 col-sm-offset-4" },
-	          _react2.default.createElement("input", { className: "form-control", type: "text", ref: "todo", onKeyPress: function onKeyPress(e) {
-	              return _this2.handleKeyPress(e);
-	            } })
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "col-sm-1 addbtn" },
+	          { className: "col-sm-5 col-sm-offset-4" },
 	          _react2.default.createElement(
-	            "button",
-	            { className: "btn btn-sm btn-primary", onClick: function onClick(e) {
-	                return _this2.handleClick(e);
-	              } },
-	            "ADD"
+	            "div",
+	            { className: "col-sm-10" },
+	            _react2.default.createElement("input", { className: "form-control", type: "text", ref: "todo", onKeyPress: function onKeyPress(e) {
+	                return _this2.handleKeyPress(e);
+	              } })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-sm-1 addbtn" },
+	            _react2.default.createElement(
+	              "button",
+	              { className: "btn btn-sm btn-primary", onClick: function onClick(e) {
+	                  return _this2.handleClick(e);
+	                } },
+	              "ADD"
+	            )
 	          )
 	        )
 	      );
