@@ -1,4 +1,4 @@
-import { ADD_TODO, TOGGLE_TODO, DELETE_TODO, EDIT_TODO, SAVE_TODO, CLEAR_COMPLETED } from "../actions/TodoActions";
+import { ADD_TODO, TOGGLE_TODO, DELETE_TODO, SAVE_TODO, CLEAR_COMPLETED } from "../actions/TodoActions";
 
 export function todos( state = [], action ) {
   switch( action.type ) {
@@ -7,8 +7,7 @@ export function todos( state = [], action ) {
         ...state,
         {
           text: action.text,
-          completed: false,
-          edit: false
+          completed: false
         }
       ];
     case DELETE_TODO:
@@ -24,10 +23,6 @@ export function todos( state = [], action ) {
 
         return todo
       });
-    case EDIT_TODO:
-      nextState = [...state];
-      nextState[ action.index ].edit = !nextState[ action.index ].edit;
-      return nextState;
     case SAVE_TODO:
       nextState = [...state];
       nextState[ action.index ].edit = !nextState[ action.index ].edit;

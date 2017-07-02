@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { VisibilityFilters, setVisibilityFilter } from '../actions/VisibilityFilterActions';
-import { addTodo, toggleTodo, deleteTodo, editTodo, saveTodo, clearCompleted } from '../actions/TodoActions';
+import { addTodo, toggleTodo, deleteTodo, saveTodo, clearCompleted } from '../actions/TodoActions';
 import FilterList from '../components/Filter/FilterList';
 import AddTodo from '../components/Todo/AddTodo';
 import TodoList from '../components/Todo/TodoList';
@@ -22,7 +22,6 @@ class App extends Component {
           todos={visibleTodos}
           onTodoClick={index => dispatch(toggleTodo(index))}
           onDeleteClick={ index => dispatch(deleteTodo(index))}
-          onEditClick={ index => dispatch(editTodo(index))}
           onSaveClick={ (index, text) => dispatch(saveTodo(index, text))}
         />
       </div>

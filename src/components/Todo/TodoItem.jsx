@@ -1,6 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class TodoItem extends Component {
+  constructor( props ) {
+    super( props );
+    this.state = {
+      edit: false
+    }
+  }
 
   save = () => {
     const todoNode = this.refs.todo
@@ -9,6 +15,8 @@ export default class TodoItem extends Component {
       this.props.onSave( this.props.index, text )
       todoNode.value = ''
     } // if
+
+    this.toggleEdit();
   }
 
   handleClick( e ) {
@@ -20,11 +28,17 @@ export default class TodoItem extends Component {
       this.save();
   }
 
+  toggleEdit = () => {
+    this.setState({
+      edit: !this.state.edit
+    })
+  }
+
   render() {
     return (
       <div className="row text-center todoItem">
         <div className="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-          { this.props.edit ?
+          { this.state.edit ?
             <span className={ (this.props.completed ? 'completed' : 'todo') + ' text-left' }>
               <span className="row col-xs-12">
                 <input ref="todo" type="text" className="form-control" defaultValue={ this.props.text } onKeyPress={e => this.handleKeyPress( e )}/>
@@ -39,13 +53,13 @@ export default class TodoItem extends Component {
           }
         </div>
         {
-          this.props.edit ?
+          this.state.edit ?
           <div className="col-sm-2 action-button">
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Cencel</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.toggleEdit }>Cencel</div>
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-primary"  onClick={(e) => this.handleClick(e)}>Save</div>
           </div> :
           <div className="col-sm-2 action-button">
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Edit</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.toggleEdit }>Edit</div>
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-danger" onClick={ this.props.onDelete }>Delete</div>
           </div>
         }
