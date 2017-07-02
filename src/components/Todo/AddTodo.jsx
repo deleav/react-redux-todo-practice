@@ -25,6 +25,8 @@ export default class AddTodo extends Component {
       this.props.onAddClick( text )
       todoNode.value = ''
     } // if
+
+    todoNode.focus();
   }
 
   handleClick( e ) {
