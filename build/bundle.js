@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "db4046409b0acc739272"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1e8c58f8ed49940152b1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -585,7 +585,7 @@
 
 	__webpack_require__(1);
 	__webpack_require__(3);
-	module.exports = __webpack_require__(221);
+	module.exports = __webpack_require__(225);
 
 
 /***/ },
@@ -709,14 +709,15 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _AppReducers = __webpack_require__(218);
+	var _RootReducers = __webpack_require__(218);
 
-	var _AppReducers2 = _interopRequireDefault(_AppReducers);
+	var _RootReducers2 = _interopRequireDefault(_RootReducers);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// import PostApp from './containers/PostApp';
 	var rootElement = document.getElementById('mountNode');
-	var store = (0, _redux.createStore)(_AppReducers2.default, window.devToolsExtension ? window.devToolsExtension() : undefined);
+	var store = (0, _redux.createStore)(_RootReducers2.default, window.devToolsExtension ? window.devToolsExtension() : undefined);
 
 	(0, _reactDom.render)(_react2.default.createElement(
 	  _reactRedux.Provider,
@@ -23968,13 +23969,17 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'app' },
+	        { className: 'app container-fluid' },
 	        _react2.default.createElement(_FilterList2.default, _extends({
 	          filter: visibilityFilter
 	        }, _VisibilityFilterActions.VisibilityFilters, {
 	          onFilterChange: function onFilterChange(filter) {
 	            return dispatch((0, _VisibilityFilterActions.setVisibilityFilter)(filter));
-	          } })),
+	          },
+	          onClearClick: function onClearClick() {
+	            return dispatch((0, _TodoActions.clearCompleted)());
+	          }
+	        })),
 	        _react2.default.createElement(_AddTodo2.default, { onAddClick: function onAddClick(text) {
 	            return dispatch((0, _TodoActions.addTodo)(text));
 	          } }),
@@ -23985,7 +23990,14 @@
 	          },
 	          onDeleteClick: function onDeleteClick(index) {
 	            return dispatch((0, _TodoActions.deleteTodo)(index));
-	          } })
+	          },
+	          onEditClick: function onEditClick(index) {
+	            return dispatch((0, _TodoActions.editTodo)(index));
+	          },
+	          onSaveClick: function onSaveClick(index, text) {
+	            return dispatch((0, _TodoActions.saveTodo)(index, text));
+	          }
+	        })
 	      );
 	    }
 	  }]);
@@ -24016,8 +24028,8 @@
 
 	function mapStateToProps(state) {
 	  return {
-	    visibleTodos: getVisibilityTodos(state.todos, state.visibilityFilter),
-	    visibilityFilter: state.visibilityFilter
+	    visibleTodos: getVisibilityTodos(state.todoAppReducer.todos, state.todoAppReducer.visibilityFilter),
+	    visibilityFilter: state.todoAppReducer.visibilityFilter
 	  };
 	}
 
@@ -24063,10 +24075,16 @@
 	exports.addTodo = addTodo;
 	exports.toggleTodo = toggleTodo;
 	exports.deleteTodo = deleteTodo;
+	exports.editTodo = editTodo;
+	exports.saveTodo = saveTodo;
+	exports.clearCompleted = clearCompleted;
 	// action type
 	var ADD_TODO = exports.ADD_TODO = "ADD_TODO";
 	var TOGGLE_TODO = exports.TOGGLE_TODO = "TOGGLE_TODO";
 	var DELETE_TODO = exports.DELETE_TODO = "DELETE_TODO";
+	var EDIT_TODO = exports.EDIT_TODO = "EDIT_TODO";
+	var SAVE_TODO = exports.SAVE_TODO = "SAVE_TODO";
+	var CLEAR_COMPLETED = exports.CLEAR_COMPLETED = "CLEAR_COMPLETED";
 
 	// action creator
 	function addTodo(text) {
@@ -24090,11 +24108,32 @@
 	  };
 	}
 
+	function editTodo(index) {
+	  return {
+	    type: EDIT_TODO,
+	    index: index
+	  };
+	}
+
+	function saveTodo(index, text) {
+	  return {
+	    type: SAVE_TODO,
+	    index: index,
+	    text: text
+	  };
+	}
+
+	function clearCompleted() {
+	  return {
+	    type: CLEAR_COMPLETED
+	  };
+	}
+
 /***/ },
 /* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -24124,12 +24163,12 @@
 	  }
 
 	  _createClass(FilterList, [{
-	    key: 'handleClick',
+	    key: "handleClick",
 	    value: function handleClick(e, filter) {
 	      this.props.onFilterChange(filter);
 	    }
 	  }, {
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      var _this2 = this;
 
@@ -24140,34 +24179,51 @@
 	          filter = _props.filter;
 
 	      return _react2.default.createElement(
-	        'div',
-	        { className: 'filterList' },
+	        "div",
+	        { className: "row" },
 	        _react2.default.createElement(
-	          'button',
-	          {
-	            className: filter == SHOW_ALL ? 'clicked' : 'unclicked',
-	            onClick: function onClick(e) {
-	              return _this2.handleClick(e, SHOW_ALL);
-	            } },
-	          'All'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          {
-	            className: filter == SHOW_COMPLETED ? 'clicked' : 'unclicked',
-	            onClick: function onClick(e) {
-	              return _this2.handleClick(e, SHOW_COMPLETED);
-	            } },
-	          'Completed'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          {
-	            className: filter == SHOW_ACTIVE ? 'clicked' : 'unclicked',
-	            onClick: function onClick(e) {
-	              return _this2.handleClick(e, SHOW_ACTIVE);
-	            } },
-	          'Active'
+	          "div",
+	          { className: "filterList col-sm-12" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-sm-4 col-sm-offset-4 text-center" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                className: (filter == SHOW_ALL ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
+	                onClick: function onClick(e) {
+	                  return _this2.handleClick(e, SHOW_ALL);
+	                } },
+	              "All"
+	            ),
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                className: (filter == SHOW_COMPLETED ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
+	                onClick: function onClick(e) {
+	                  return _this2.handleClick(e, SHOW_COMPLETED);
+	                } },
+	              "Completed"
+	            ),
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                className: (filter == SHOW_ACTIVE ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
+	                onClick: function onClick(e) {
+	                  return _this2.handleClick(e, SHOW_ACTIVE);
+	                } },
+	              "Active"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-sm-1 text-center" },
+	            filter == SHOW_COMPLETED ? _react2.default.createElement(
+	              "button",
+	              { className: "btn btn-sm", onClick: this.props.onClearClick },
+	              "Clear Completed"
+	            ) : ''
+	          )
 	        )
 	      );
 	    }
@@ -24188,7 +24244,7 @@
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -24233,32 +24289,40 @@
 	  }
 
 	  _createClass(AddTodo, [{
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      var _this2 = this;
 
 	      return _react2.default.createElement(
-	        'div',
-	        { className: 'addTodo' },
-	        _react2.default.createElement('input', { type: 'text', ref: 'todo', onKeyPress: function onKeyPress(e) {
-	            return _this2.handleKeyPress(e);
-	          } }),
+	        "div",
+	        { className: "addTodo col-sm-12 text-center" },
 	        _react2.default.createElement(
-	          'button',
-	          { onClick: function onClick(e) {
-	              return _this2.handleClick(e);
-	            } },
-	          'ADD'
+	          "div",
+	          { className: "col-sm-4 col-sm-offset-4" },
+	          _react2.default.createElement("input", { className: "form-control", type: "text", ref: "todo", onKeyPress: function onKeyPress(e) {
+	              return _this2.handleKeyPress(e);
+	            } })
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "col-sm-1 addbtn" },
+	          _react2.default.createElement(
+	            "button",
+	            { className: "btn btn-sm btn-primary", onClick: function onClick(e) {
+	                return _this2.handleClick(e);
+	              } },
+	            "ADD"
+	          )
 	        )
 	      );
 	    }
 	  }, {
-	    key: 'handleClick',
+	    key: "handleClick",
 	    value: function handleClick(e) {
 	      this.add();
 	    }
 	  }, {
-	    key: 'handleKeyPress',
+	    key: "handleKeyPress",
 	    value: function handleKeyPress(e) {
 	      if (e.key == 'Enter') this.add();
 	    }
@@ -24319,19 +24383,30 @@
 	      var _this2 = this;
 
 	      return _react2.default.createElement(
-	        'ol',
-	        { className: 'todoList' },
-	        this.props.todos.map(function (todo, index) {
-	          return _react2.default.createElement(_TodoItem2.default, _extends({}, todo, {
-	            key: index,
-	            onClick: function onClick() {
-	              return _this2.props.onTodoClick(todo.index);
-	            },
-	            onDelete: function onDelete() {
-	              return _this2.props.onDeleteClick(todo.index);
-	            }
-	          }));
-	        })
+	        'div',
+	        { className: 'row todoList' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-sm-12' },
+	          this.props.todos.map(function (todo, index) {
+	            return _react2.default.createElement(_TodoItem2.default, _extends({}, todo, {
+	              key: index,
+	              index: index,
+	              onClick: function onClick() {
+	                return _this2.props.onTodoClick(todo.index);
+	              },
+	              onDelete: function onDelete() {
+	                return _this2.props.onDeleteClick(todo.index);
+	              },
+	              onEdit: function onEdit() {
+	                return _this2.props.onEditClick(todo.index);
+	              },
+	              onSave: function onSave(index, text) {
+	                return _this2.props.onSaveClick(index, text);
+	              }
+	            }));
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -24378,24 +24453,97 @@
 	  _inherits(TodoItem, _Component);
 
 	  function TodoItem() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
 	    _classCallCheck(this, TodoItem);
 
-	    return _possibleConstructorReturn(this, (TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).apply(this, arguments));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).call.apply(_ref, [this].concat(args))), _this), _this.save = function () {
+	      var todoNode = _this.refs.todo;
+	      var text = todoNode.value.trim();
+	      if (text.length > 0) {
+	        _this.props.onSave(_this.props.index, text);
+	        todoNode.value = '';
+	      } // if
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(TodoItem, [{
+	    key: 'handleClick',
+	    value: function handleClick(e) {
+	      this.save();
+	    }
+	  }, {
+	    key: 'handleKeyPress',
+	    value: function handleKeyPress(e) {
+	      if (e.key == 'Enter') this.save();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
-	        'li',
-	        null,
+	        'div',
+	        { className: 'row text-center todoItem' },
 	        _react2.default.createElement(
-	          'span',
-	          { className: this.props.completed ? 'completed' : 'todo',
-	            onClick: this.props.onClick },
-	          this.props.text
+	          'div',
+	          { className: 'col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4' },
+	          this.props.edit ? _react2.default.createElement(
+	            'span',
+	            { className: (this.props.completed ? 'completed' : 'todo') + ' text-left' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'row col-xs-12' },
+	              _react2.default.createElement('input', { ref: 'todo', type: 'text', className: 'form-control', defaultValue: this.props.text, onKeyPress: function onKeyPress(e) {
+	                  return _this2.handleKeyPress(e);
+	                } })
+	            )
+	          ) : _react2.default.createElement(
+	            'span',
+	            { className: (this.props.completed ? 'completed' : 'todo') + ' text-left',
+	              onClick: this.props.onClick },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'row col-xs-12 form-control-static' },
+	              this.props.text
+	            )
+	          )
 	        ),
-	        _react2.default.createElement('span', { className: 'close', onClick: this.props.onDelete })
+	        this.props.edit ? _react2.default.createElement(
+	          'div',
+	          { className: 'col-sm-2 action-button' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
+	            'Cencel'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-primary', onClick: function onClick(e) {
+	                return _this2.handleClick(e);
+	              } },
+	            'Save'
+	          )
+	        ) : _react2.default.createElement(
+	          'div',
+	          { className: 'col-sm-2 action-button' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
+	            'Edit'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-danger', onClick: this.props.onDelete },
+	            'Delete'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -24424,19 +24572,48 @@
 
 	var _redux = __webpack_require__(181);
 
-	var _TodoReducers = __webpack_require__(219);
+	var _TodoAppReducers = __webpack_require__(219);
 
-	var _VisibilityFilterReducers = __webpack_require__(220);
+	var _TodoAppReducers2 = _interopRequireDefault(_TodoAppReducers);
 
-	var todoApp = (0, _redux.combineReducers)({
+	var _PostAppReducers = __webpack_require__(222);
+
+	var _PostAppReducers2 = _interopRequireDefault(_PostAppReducers);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var rootReducer = (0, _redux.combineReducers)({
+	  todoAppReducer: _TodoAppReducers2.default,
+	  postAppReducer: _PostAppReducers2.default
+	});
+
+	exports.default = rootReducer;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(181);
+
+	var _TodoReducers = __webpack_require__(220);
+
+	var _VisibilityFilterReducers = __webpack_require__(221);
+
+	var todoAppReducer = (0, _redux.combineReducers)({
 	  visibilityFilter: _VisibilityFilterReducers.visibilityFilter,
 	  todos: _TodoReducers.todos
 	});
 
-	exports.default = todoApp;
+	exports.default = todoAppReducer;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24461,7 +24638,8 @@
 	    case _TodoActions.ADD_TODO:
 	      return [].concat(_toConsumableArray(state), [{
 	        text: action.text,
-	        completed: false
+	        completed: false,
+	        edit: false
 	      }]);
 	    case _TodoActions.DELETE_TODO:
 	      var nextState = [].concat(_toConsumableArray(state));
@@ -24474,13 +24652,26 @@
 
 	        return todo;
 	      });
+	    case _TodoActions.EDIT_TODO:
+	      nextState = [].concat(_toConsumableArray(state));
+	      nextState[action.index].edit = !nextState[action.index].edit;
+	      return nextState;
+	    case _TodoActions.SAVE_TODO:
+	      nextState = [].concat(_toConsumableArray(state));
+	      nextState[action.index].edit = !nextState[action.index].edit;
+	      nextState[action.index].text = action.text;
+	      return nextState;
+	    case _TodoActions.CLEAR_COMPLETED:
+	      return state.filter(function (todo) {
+	        return !todo.completed;
+	      });
 	    default:
 	      return state;
 	  }
 	}
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24506,15 +24697,92 @@
 	}
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	__webpack_require__(222);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(181);
+
+	var _PostReducers = __webpack_require__(223);
+
+	var postAppReducer = (0, _redux.combineReducers)({
+	  posts: _PostReducers.posts
+	});
+
+	exports.default = postAppReducer;
 
 /***/ },
-/* 222 */
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.posts = posts;
+
+	var _PostActions = __webpack_require__(224);
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function posts() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case _PostActions.ADD_POST:
+	      return [action.ctx].concat(_toConsumableArray(state));
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 224 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.addPost = addPost;
+	// action type
+	var ADD_POST = exports.ADD_POST = "ADD_POST";
+
+	// action creator
+	function addPost(ctx) {
+	  return {
+	    type: ADD_POST,
+	    ctx: ctx
+	  };
+	}
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	__webpack_require__(226);
+
+	__webpack_require__(228);
+
+/***/ },
+/* 226 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 227 */,
+/* 228 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
