@@ -3,11 +3,15 @@ import React, { Component, PropTypes } from 'react';
 export default class AddTodo extends Component {
   render() {
     return (
-      <div className="addTodo">
-        <input type='text' ref='todo' onKeyPress={e => this.handleKeyPress( e )} />
-        <button onClick={(e) => this.handleClick(e)}>
-          ADD
-        </button>
+      <div className="addTodo col-sm-12 text-center">
+        <div className="col-sm-4 col-sm-offset-4">
+          <input className="form-control" type='text' ref='todo' onKeyPress={e => this.handleKeyPress( e )} />
+        </div>
+        <div className="col-sm-1 addbtn">
+          <button className="btn btn-sm btn-primary" onClick={(e) => this.handleClick(e)}>
+            ADD
+          </button>
+        </div>
       </div>
     )
   }
