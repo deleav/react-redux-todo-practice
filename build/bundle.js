@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "222d8c0f1d6824c2b0a2"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fd953290c57bad3e6725"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23978,6 +23978,9 @@
 	          },
 	          onClearClick: function onClearClick() {
 	            return dispatch((0, _TodoActions.clearCompleted)());
+	          },
+	          onResetEdit: function onResetEdit() {
+	            return dispatch((0, _TodoActions.resetEdit)());
 	          }
 	        })),
 	        _react2.default.createElement(_AddTodo2.default, { onAddClick: function onAddClick(text) {
@@ -23990,6 +23993,9 @@
 	          },
 	          onDeleteClick: function onDeleteClick(index) {
 	            return dispatch((0, _TodoActions.deleteTodo)(index));
+	          },
+	          onEditClick: function onEditClick(index) {
+	            return dispatch((0, _TodoActions.editTodo)(index));
 	          },
 	          onSaveClick: function onSaveClick(index, text) {
 	            return dispatch((0, _TodoActions.saveTodo)(index, text));
@@ -24072,12 +24078,16 @@
 	exports.addTodo = addTodo;
 	exports.toggleTodo = toggleTodo;
 	exports.deleteTodo = deleteTodo;
+	exports.editTodo = editTodo;
+	exports.resetEdit = resetEdit;
 	exports.saveTodo = saveTodo;
 	exports.clearCompleted = clearCompleted;
 	// action type
 	var ADD_TODO = exports.ADD_TODO = "ADD_TODO";
 	var TOGGLE_TODO = exports.TOGGLE_TODO = "TOGGLE_TODO";
 	var DELETE_TODO = exports.DELETE_TODO = "DELETE_TODO";
+	var EDIT_TODO = exports.EDIT_TODO = "EDIT_TODO";
+	var REAET_EDIT = exports.REAET_EDIT = "REAET_EDIT";
 	var SAVE_TODO = exports.SAVE_TODO = "SAVE_TODO";
 	var CLEAR_COMPLETED = exports.CLEAR_COMPLETED = "CLEAR_COMPLETED";
 
@@ -24100,6 +24110,19 @@
 	  return {
 	    type: DELETE_TODO,
 	    index: index
+	  };
+	}
+
+	function editTodo(index) {
+	  return {
+	    type: EDIT_TODO,
+	    index: index
+	  };
+	}
+
+	function resetEdit() {
+	  return {
+	    type: REAET_EDIT
 	  };
 	}
 
@@ -24153,6 +24176,7 @@
 	  _createClass(FilterList, [{
 	    key: "handleClick",
 	    value: function handleClick(e, filter) {
+	      this.props.onResetEdit();
 	      this.props.onFilterChange(filter);
 	    }
 	  }, {
@@ -24273,6 +24297,8 @@
 	        _this.props.onAddClick(text);
 	        todoNode.value = '';
 	      } // if
+
+	      todoNode.focus();
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
@@ -24390,6 +24416,9 @@
 	              onDelete: function onDelete() {
 	                return _this2.props.onDeleteClick(todo.index);
 	              },
+	              onEdit: function onEdit() {
+	                return _this2.props.onEditClick(todo.index);
+	              },
 	              onSave: function onSave(index, text) {
 	                return _this2.props.onSaveClick(index, text);
 	              }
@@ -24441,32 +24470,28 @@
 	var TodoItem = function (_Component) {
 	  _inherits(TodoItem, _Component);
 
-	  function TodoItem(props) {
+	  function TodoItem() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
 	    _classCallCheck(this, TodoItem);
 
-	    var _this = _possibleConstructorReturn(this, (TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).call(this, props));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
 
-	    _this.save = function () {
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).call.apply(_ref, [this].concat(args))), _this), _this.save = function () {
 	      var todoNode = _this.refs.todo;
 	      var text = todoNode.value.trim();
 	      if (text.length > 0) {
 	        _this.props.onSave(_this.props.index, text);
 	        todoNode.value = '';
 	      } // if
-
-	      _this.toggleEdit();
-	    };
-
-	    _this.toggleEdit = function () {
-	      _this.setState({
-	        edit: !_this.state.edit
-	      });
-	    };
-
-	    _this.state = {
-	      edit: false
-	    };
-	    return _this;
+	    }, _this.handleDelete = function () {
+	      var confirm = window.confirm("Confirm to delete");
+	      if (confirm) _this.props.onDelete();
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(TodoItem, [{
@@ -24490,7 +24515,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4' },
-	          this.state.edit ? _react2.default.createElement(
+	          this.props.edit ? _react2.default.createElement(
 	            'span',
 	            { className: (this.props.completed ? 'completed' : 'todo') + ' text-left' },
 	            _react2.default.createElement(
@@ -24511,12 +24536,12 @@
 	            )
 	          )
 	        ),
-	        this.state.edit ? _react2.default.createElement(
+	        this.props.edit ? _react2.default.createElement(
 	          'div',
 	          { className: 'col-sm-2 action-button' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.toggleEdit },
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
 	            'Cencel'
 	          ),
 	          _react2.default.createElement(
@@ -24531,12 +24556,12 @@
 	          { className: 'col-sm-2 action-button' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.toggleEdit },
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
 	            'Edit'
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-danger', onClick: this.props.onDelete },
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-danger', onClick: this.handleDelete },
 	            'Delete'
 	          )
 	        )
@@ -24634,7 +24659,8 @@
 	    case _TodoActions.ADD_TODO:
 	      return [].concat(_toConsumableArray(state), [{
 	        text: action.text,
-	        completed: false
+	        completed: false,
+	        edit: false
 	      }]);
 	    case _TodoActions.DELETE_TODO:
 	      var nextState = [].concat(_toConsumableArray(state));
@@ -24647,6 +24673,18 @@
 
 	        return todo;
 	      });
+	    case _TodoActions.EDIT_TODO:
+	      nextState = [].concat(_toConsumableArray(state));
+	      nextState[action.index].edit = !nextState[action.index].edit;
+	      return nextState;
+	    case _TodoActions.REAET_EDIT:
+	      nextState = [];
+	      state.map(function (todo) {
+	        if (todo.edit) todo.edit = false;
+	        nextState.push(todo);
+	      });
+
+	      return nextState;
 	    case _TodoActions.SAVE_TODO:
 	      nextState = [].concat(_toConsumableArray(state));
 	      nextState[action.index].edit = !nextState[action.index].edit;
