@@ -20,6 +20,12 @@ export default class TodoItem extends Component {
       this.save();
   }
 
+  handleDelete = () => {
+    let confirm = window.confirm("Confirm to delete");
+    if ( confirm )
+      this.props.onDelete();
+  }
+
   render() {
     return (
       <div className="row text-center todoItem">
@@ -46,7 +52,7 @@ export default class TodoItem extends Component {
           </div> :
           <div className="col-sm-2 action-button">
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Edit</div>
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-danger" onClick={ this.props.onDelete }>Delete</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-danger" onClick={ this.handleDelete }>Delete</div>
           </div>
         }
       </div>
