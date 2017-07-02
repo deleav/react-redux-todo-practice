@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 export default class FilterList extends Component {
 
   handleClick( e, filter ) {
+    this.props.onResetEdit();
     this.props.onFilterChange( filter );
   }
 

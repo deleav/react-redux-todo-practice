@@ -12,6 +12,7 @@ export default class TodoList extends Component {
                   index={todo.index}
                   onClick={ () => this.props.onTodoClick( todo.index ) }
                   onDelete={ () => this.props.onDeleteClick( todo.index ) }
+                  onEdit={ () => this.props.onEditClick( todo.index ) }
                   onSave={ ( index, text ) => this.props.onSaveClick( index, text ) }
             />
           )}
