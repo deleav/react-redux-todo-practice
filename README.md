@@ -1,6 +1,6 @@
 # react-blog-template
 ## DEMO
-  * [DEMO](https://deleav.github.io/react-blog-template/)
+  * [DEMO](https://deleav.github.io/react-redux-todo-practice/)
 
 ## Usage
   * npm i
