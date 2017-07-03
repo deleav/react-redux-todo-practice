@@ -1,4 +1,4 @@
-# react-blog-template
+# react-redux-todo-practice
 ## DEMO
   * [DEMO](https://deleav.github.io/react-redux-todo-practice/)
 
