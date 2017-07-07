@@ -11,11 +11,11 @@ export default class TodoItem extends Component {
     } // if
   }
 
-  handleClick( e ) {
+  handleClick = ( e ) => {
     this.save();
   }
 
-  handleKeyPress( e ) {
+  handleKeyPress = ( e ) => {
     if ( e.key == 'Enter' )
       this.save();
   }
@@ -33,7 +33,7 @@ export default class TodoItem extends Component {
           { this.props.edit ?
             <span className={ (this.props.completed ? 'completed' : 'todo') + ' text-left' }>
               <span className="row col-xs-12">
-                <input ref="todo" type="text" className="form-control" defaultValue={ this.props.text } onKeyPress={e => this.handleKeyPress( e )}/>
+                <input ref="todo" type="text" className="form-control" defaultValue={ this.props.text } onKeyPress={ this.handleKeyPress }/>
               </span>
             </span> :
             <span className={ (this.props.completed ? 'completed' : 'todo') + ' text-left' }
@@ -48,7 +48,7 @@ export default class TodoItem extends Component {
           this.props.edit ?
           <div className="col-sm-2 action-button">
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Cencel</div>
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-primary"  onClick={(e) => this.handleClick(e)}>Save</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-primary"  onClick={this.handleClick}>Save</div>
           </div> :
           <div className="col-sm-2 action-button">
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Edit</div>
