@@ -8,23 +8,32 @@ import TodoList from '../components/Todo/TodoList';
 
 class App extends Component {
   render() {
-    const { dispatch, visibilityFilter, visibleTodos } = this.props
+    const { visibilityFilter, visibleTodos } = this.props;
+    const { onFilterChange,
+            onClearClick,
+            onResetEdit,
+            onAddClick,
+            onTodoClick,
+            onDeleteClick,
+            onEditClick,
+            onSaveClick
+          } = this.props;
     return (
       <div className="app container-fluid">
         <FilterList
           filter={visibilityFilter}
           {...VisibilityFilters}
-          onFilterChange={filter => dispatch( setVisibilityFilter( filter ) )}
-          onClearClick={() => dispatch(clearCompleted())}
-          onResetEdit={() => dispatch(resetEdit())}
+          onFilterChange={onFilterChange}
+          onClearClick={onClearClick}
+          onResetEdit={onResetEdit}
         />
-        <AddTodo onAddClick={text => dispatch(addTodo(text))}/>
+        <AddTodo onAddClick={onAddClick}/>
         <TodoList
           todos={visibleTodos}
-          onTodoClick={index => dispatch(toggleTodo(index))}
-          onDeleteClick={ index => dispatch(deleteTodo(index))}
-          onEditClick={ index => dispatch(editTodo(index))}
-          onSaveClick={ (index, text) => dispatch(saveTodo(index, text))}
+          onTodoClick={onTodoClick}
+          onDeleteClick={onDeleteClick}
+          onEditClick={onEditClick}
+          onSaveClick={onSaveClick}
         />
       </div>
     )
@@ -61,4 +70,17 @@ function mapStateToProps( state ) {
   };
 }
 
-export default connect( mapStateToProps )(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    onFilterChange: filter => dispatch(setVisibilityFilter( filter )),
+    onClearClick: () => dispatch(clearCompleted()),
+    onResetEdit: () => dispatch(resetEdit()),
+    onAddClick: text => dispatch(addTodo(text)),
+    onTodoClick: index => dispatch(toggleTodo(index)),
+    onDeleteClick: index => dispatch(deleteTodo(index)),
+    onEditClick: index => dispatch(editTodo(index)),
+    onSaveClick: (index, text) => dispatch(saveTodo(index, text))
+  }
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )(App);
