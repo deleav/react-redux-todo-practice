@@ -1,10 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class FilterList extends Component {
-
-  handleClick( e, filter ) {
+  showAll = () => {
     this.props.onResetEdit();
-    this.props.onFilterChange( filter );
+    this.props.onFilterChange( this.props.SHOW_ALL );
+  }
+  showCompleted = () => {
+    this.props.onResetEdit();
+    this.props.onFilterChange( this.props.SHOW_COMPLETED );
+  }
+  showActive = () => {
+    this.props.onResetEdit();
+    this.props.onFilterChange( this.props.SHOW_ACTIVE );
   }
 
   render() {
@@ -15,17 +22,17 @@ export default class FilterList extends Component {
           <div className="col-sm-4 col-sm-offset-4 text-center">
             <button
               className={(filter == SHOW_ALL ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm'}
-              onClick={e => this.handleClick( e, SHOW_ALL )}>
+              onClick={this.showAll}>
               All
             </button>
             <button
               className={(filter == SHOW_COMPLETED ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm'}
-              onClick={e => this.handleClick( e, SHOW_COMPLETED )}>
+              onClick={this.showCompleted}>
               Completed
             </button>
             <button
               className={(filter == SHOW_ACTIVE ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm'}
-              onClick={e => this.handleClick( e, SHOW_ACTIVE )}>
+              onClick={this.showActive}>
               Active
             </button>
           </div>
