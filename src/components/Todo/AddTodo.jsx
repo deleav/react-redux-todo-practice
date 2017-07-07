@@ -6,10 +6,10 @@ export default class AddTodo extends Component {
       <div className="addTodo col-sm-12 text-center">
         <div className="col-sm-5 col-sm-offset-4">
           <div className="col-sm-10">
-            <input className="form-control" type='text' ref='todo' onKeyPress={e => this.handleKeyPress( e )} />
+            <input className="form-control" type='text' ref='todo' onKeyPress={ this.handleKeyPress } />
           </div>
           <div className="col-sm-1 addbtn">
-            <button className="btn btn-sm btn-primary" onClick={(e) => this.handleClick(e)}>
+            <button className="btn btn-sm btn-primary" onClick={ this.handleClick }>
               ADD
             </button>
           </div>
@@ -29,11 +29,11 @@ export default class AddTodo extends Component {
     todoNode.focus();
   }
 
-  handleClick( e ) {
+  handleClick = e => {
     this.add();
   }
 
-  handleKeyPress( e ) {
+  handleKeyPress = e => {
     if ( e.key == 'Enter' )
       this.add();
   }

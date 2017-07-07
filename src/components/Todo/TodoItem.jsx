@@ -23,7 +23,15 @@ export default class TodoItem extends Component {
   handleDelete = () => {
     let confirm = window.confirm("Confirm to delete");
     if ( confirm )
-      this.props.onDelete();
+      this.props.onDelete( this.props.index );
+  }
+
+  handleToggle = () => {
+    this.props.onClick( this.props.index );
+  }
+
+  handleEdit = () => {
+    this.props.onEdit( this.props.index );
   }
 
   render() {
@@ -37,7 +45,7 @@ export default class TodoItem extends Component {
               </span>
             </span> :
             <span className={ (this.props.completed ? 'completed' : 'todo') + ' text-left' }
-              onClick={ this.props.onClick }>
+              onClick={ this.handleToggle }>
               <span className="row col-xs-12 form-control-static">
                 { this.props.text }
               </span>
@@ -47,11 +55,11 @@ export default class TodoItem extends Component {
         {
           this.props.edit ?
           <div className="col-sm-2 action-button">
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Cencel</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.handleEdit }>Cancel</div>
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-primary"  onClick={this.handleClick}>Save</div>
           </div> :
           <div className="col-sm-2 action-button">
-            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.props.onEdit }>Edit</div>
+            <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-default" onClick={ this.handleEdit }>Edit</div>
             <div className="edit col-sm-6 col-lg-4 btn btn-sm btn-danger" onClick={ this.handleDelete }>Delete</div>
           </div>
         }
