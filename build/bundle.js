@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fd953290c57bad3e6725"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "01ed2d0126938f43d2ed"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23963,9 +23963,17 @@
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props,
-	          dispatch = _props.dispatch,
 	          visibilityFilter = _props.visibilityFilter,
 	          visibleTodos = _props.visibleTodos;
+	      var _props2 = this.props,
+	          onFilterChange = _props2.onFilterChange,
+	          onClearClick = _props2.onClearClick,
+	          onResetEdit = _props2.onResetEdit,
+	          onAddClick = _props2.onAddClick,
+	          onTodoClick = _props2.onTodoClick,
+	          onDeleteClick = _props2.onDeleteClick,
+	          onEditClick = _props2.onEditClick,
+	          onSaveClick = _props2.onSaveClick;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -23973,33 +23981,17 @@
 	        _react2.default.createElement(_FilterList2.default, _extends({
 	          filter: visibilityFilter
 	        }, _VisibilityFilterActions.VisibilityFilters, {
-	          onFilterChange: function onFilterChange(filter) {
-	            return dispatch((0, _VisibilityFilterActions.setVisibilityFilter)(filter));
-	          },
-	          onClearClick: function onClearClick() {
-	            return dispatch((0, _TodoActions.clearCompleted)());
-	          },
-	          onResetEdit: function onResetEdit() {
-	            return dispatch((0, _TodoActions.resetEdit)());
-	          }
+	          onFilterChange: onFilterChange,
+	          onClearClick: onClearClick,
+	          onResetEdit: onResetEdit
 	        })),
-	        _react2.default.createElement(_AddTodo2.default, { onAddClick: function onAddClick(text) {
-	            return dispatch((0, _TodoActions.addTodo)(text));
-	          } }),
+	        _react2.default.createElement(_AddTodo2.default, { onAddClick: onAddClick }),
 	        _react2.default.createElement(_TodoList2.default, {
 	          todos: visibleTodos,
-	          onTodoClick: function onTodoClick(index) {
-	            return dispatch((0, _TodoActions.toggleTodo)(index));
-	          },
-	          onDeleteClick: function onDeleteClick(index) {
-	            return dispatch((0, _TodoActions.deleteTodo)(index));
-	          },
-	          onEditClick: function onEditClick(index) {
-	            return dispatch((0, _TodoActions.editTodo)(index));
-	          },
-	          onSaveClick: function onSaveClick(index, text) {
-	            return dispatch((0, _TodoActions.saveTodo)(index, text));
-	          }
+	          onTodoClick: onTodoClick,
+	          onDeleteClick: onDeleteClick,
+	          onEditClick: onEditClick,
+	          onSaveClick: onSaveClick
 	        })
 	      );
 	    }
@@ -24036,7 +24028,36 @@
 	  };
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    onFilterChange: function onFilterChange(filter) {
+	      return dispatch((0, _VisibilityFilterActions.setVisibilityFilter)(filter));
+	    },
+	    onClearClick: function onClearClick() {
+	      return dispatch((0, _TodoActions.clearCompleted)());
+	    },
+	    onResetEdit: function onResetEdit() {
+	      return dispatch((0, _TodoActions.resetEdit)());
+	    },
+	    onAddClick: function onAddClick(text) {
+	      return dispatch((0, _TodoActions.addTodo)(text));
+	    },
+	    onTodoClick: function onTodoClick(index) {
+	      return dispatch((0, _TodoActions.toggleTodo)(index));
+	    },
+	    onDeleteClick: function onDeleteClick(index) {
+	      return dispatch((0, _TodoActions.deleteTodo)(index));
+	    },
+	    onEditClick: function onEditClick(index) {
+	      return dispatch((0, _TodoActions.editTodo)(index));
+	    },
+	    onSaveClick: function onSaveClick(index, text) {
+	      return dispatch((0, _TodoActions.saveTodo)(index, text));
+	    }
+	  };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 /***/ },
 /* 212 */
@@ -24168,22 +24189,31 @@
 	  _inherits(FilterList, _Component);
 
 	  function FilterList() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
 	    _classCallCheck(this, FilterList);
 
-	    return _possibleConstructorReturn(this, (FilterList.__proto__ || Object.getPrototypeOf(FilterList)).apply(this, arguments));
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = FilterList.__proto__ || Object.getPrototypeOf(FilterList)).call.apply(_ref, [this].concat(args))), _this), _this.showAll = function () {
+	      _this.props.onResetEdit();
+	      _this.props.onFilterChange(_this.props.SHOW_ALL);
+	    }, _this.showCompleted = function () {
+	      _this.props.onResetEdit();
+	      _this.props.onFilterChange(_this.props.SHOW_COMPLETED);
+	    }, _this.showActive = function () {
+	      _this.props.onResetEdit();
+	      _this.props.onFilterChange(_this.props.SHOW_ACTIVE);
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(FilterList, [{
-	    key: "handleClick",
-	    value: function handleClick(e, filter) {
-	      this.props.onResetEdit();
-	      this.props.onFilterChange(filter);
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this2 = this;
-
 	      var _props = this.props,
 	          SHOW_ALL = _props.SHOW_ALL,
 	          SHOW_COMPLETED = _props.SHOW_COMPLETED,
@@ -24203,27 +24233,21 @@
 	              "button",
 	              {
 	                className: (filter == SHOW_ALL ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
-	                onClick: function onClick(e) {
-	                  return _this2.handleClick(e, SHOW_ALL);
-	                } },
+	                onClick: this.showAll },
 	              "All"
 	            ),
 	            _react2.default.createElement(
 	              "button",
 	              {
 	                className: (filter == SHOW_COMPLETED ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
-	                onClick: function onClick(e) {
-	                  return _this2.handleClick(e, SHOW_COMPLETED);
-	                } },
+	                onClick: this.showCompleted },
 	              "Completed"
 	            ),
 	            _react2.default.createElement(
 	              "button",
 	              {
 	                className: (filter == SHOW_ACTIVE ? 'clicked' : 'unclicked') + ' btn btn-default btn-sm',
-	                onClick: function onClick(e) {
-	                  return _this2.handleClick(e, SHOW_ACTIVE);
-	                } },
+	                onClick: this.showActive },
 	              "Active"
 	            )
 	          ),
@@ -24299,14 +24323,16 @@
 	      } // if
 
 	      todoNode.focus();
+	    }, _this.handleClick = function (e) {
+	      _this.add();
+	    }, _this.handleKeyPress = function (e) {
+	      if (e.key == 'Enter') _this.add();
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(AddTodo, [{
 	    key: "render",
 	    value: function render() {
-	      var _this2 = this;
-
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "addTodo col-sm-12 text-center" },
@@ -24316,33 +24342,19 @@
 	          _react2.default.createElement(
 	            "div",
 	            { className: "col-sm-10" },
-	            _react2.default.createElement("input", { className: "form-control", type: "text", ref: "todo", onKeyPress: function onKeyPress(e) {
-	                return _this2.handleKeyPress(e);
-	              } })
+	            _react2.default.createElement("input", { className: "form-control", type: "text", ref: "todo", onKeyPress: this.handleKeyPress })
 	          ),
 	          _react2.default.createElement(
 	            "div",
 	            { className: "col-sm-1 addbtn" },
 	            _react2.default.createElement(
 	              "button",
-	              { className: "btn btn-sm btn-primary", onClick: function onClick(e) {
-	                  return _this2.handleClick(e);
-	                } },
+	              { className: "btn btn-sm btn-primary", onClick: this.handleClick },
 	              "ADD"
 	            )
 	          )
 	        )
 	      );
-	    }
-	  }, {
-	    key: "handleClick",
-	    value: function handleClick(e) {
-	      this.add();
-	    }
-	  }, {
-	    key: "handleKeyPress",
-	    value: function handleKeyPress(e) {
-	      if (e.key == 'Enter') this.add();
 	    }
 	  }]);
 
@@ -24410,18 +24422,10 @@
 	            return _react2.default.createElement(_TodoItem2.default, _extends({}, todo, {
 	              key: todo.index,
 	              index: todo.index,
-	              onClick: function onClick() {
-	                return _this2.props.onTodoClick(todo.index);
-	              },
-	              onDelete: function onDelete() {
-	                return _this2.props.onDeleteClick(todo.index);
-	              },
-	              onEdit: function onEdit() {
-	                return _this2.props.onEditClick(todo.index);
-	              },
-	              onSave: function onSave(index, text) {
-	                return _this2.props.onSaveClick(index, text);
-	              }
+	              onClick: _this2.props.onTodoClick,
+	              onDelete: _this2.props.onDeleteClick,
+	              onEdit: _this2.props.onEditClick,
+	              onSave: _this2.props.onSaveClick
 	            }));
 	          })
 	        )
@@ -24488,27 +24492,23 @@
 	        _this.props.onSave(_this.props.index, text);
 	        todoNode.value = '';
 	      } // if
+	    }, _this.handleClick = function (e) {
+	      _this.save();
+	    }, _this.handleKeyPress = function (e) {
+	      if (e.key == 'Enter') _this.save();
 	    }, _this.handleDelete = function () {
 	      var confirm = window.confirm("Confirm to delete");
-	      if (confirm) _this.props.onDelete();
+	      if (confirm) _this.props.onDelete(_this.props.index);
+	    }, _this.handleToggle = function () {
+	      _this.props.onClick(_this.props.index);
+	    }, _this.handleEdit = function () {
+	      _this.props.onEdit(_this.props.index);
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
 	  _createClass(TodoItem, [{
-	    key: 'handleClick',
-	    value: function handleClick(e) {
-	      this.save();
-	    }
-	  }, {
-	    key: 'handleKeyPress',
-	    value: function handleKeyPress(e) {
-	      if (e.key == 'Enter') this.save();
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row text-center todoItem' },
@@ -24521,14 +24521,12 @@
 	            _react2.default.createElement(
 	              'span',
 	              { className: 'row col-xs-12' },
-	              _react2.default.createElement('input', { ref: 'todo', type: 'text', className: 'form-control', defaultValue: this.props.text, onKeyPress: function onKeyPress(e) {
-	                  return _this2.handleKeyPress(e);
-	                } })
+	              _react2.default.createElement('input', { ref: 'todo', type: 'text', className: 'form-control', defaultValue: this.props.text, onKeyPress: this.handleKeyPress })
 	            )
 	          ) : _react2.default.createElement(
 	            'span',
 	            { className: (this.props.completed ? 'completed' : 'todo') + ' text-left',
-	              onClick: this.props.onClick },
+	              onClick: this.handleToggle },
 	            _react2.default.createElement(
 	              'span',
 	              { className: 'row col-xs-12 form-control-static' },
@@ -24541,14 +24539,12 @@
 	          { className: 'col-sm-2 action-button' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
-	            'Cencel'
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.handleEdit },
+	            'Cancel'
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-primary', onClick: function onClick(e) {
-	                return _this2.handleClick(e);
-	              } },
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-primary', onClick: this.handleClick },
 	            'Save'
 	          )
 	        ) : _react2.default.createElement(
@@ -24556,7 +24552,7 @@
 	          { className: 'col-sm-2 action-button' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.props.onEdit },
+	            { className: 'edit col-sm-6 col-lg-4 btn btn-sm btn-default', onClick: this.handleEdit },
 	            'Edit'
 	          ),
 	          _react2.default.createElement(
